@@ -1,1 +1,1 @@
-# python_zadania
+# Repozytorium do pracy nad zadaniami z kursu języka python.
