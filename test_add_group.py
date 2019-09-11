@@ -14,9 +14,18 @@ class TestDodajGrupe(unittest.TestCase):
     def test_dodaj_grupe(self):
         wd = self.wd
         self.otworz_strone_startowa(wd)
-        self.zaloguj(wd)
+        self.zaloguj(wd, username="admin", password="secret")
         self.przejdz_do_grup(wd)
-        self.utworz_grupe(wd)
+        self.utworz_grupe(wd, name="grupa1", header="jakiś tekst", footer="jakiś tekstsdsdsd")
+        self.powrot_do_grup(wd)
+        self.wyloguj(wd)
+
+    def test_dodaj_pusta_grupe(self):
+        wd = self.wd
+        self.otworz_strone_startowa(wd)
+        self.zaloguj(wd, username="admin", password="secret")
+        self.przejdz_do_grup(wd)
+        self.utworz_grupe(wd, name="", header="", footer="")
         self.powrot_do_grup(wd)
         self.wyloguj(wd)
 
@@ -26,32 +35,32 @@ class TestDodajGrupe(unittest.TestCase):
     def powrot_do_grup(self, wd):
         wd.find_element_by_link_text("groups").click()
 
-    def utworz_grupe(self, wd):
+    def utworz_grupe(self, wd, name, header, footer):
         # Dodaj grupe
         wd.find_element_by_name("new").click()
         # Wypelnij grupe
         wd.find_element_by_name("group_name").click()
         wd.find_element_by_name("group_name").clear()
-        wd.find_element_by_name("group_name").send_keys("grupa1")
+        wd.find_element_by_name("group_name").send_keys(name)
         wd.find_element_by_name("group_header").click()
         wd.find_element_by_name("group_header").click()
         wd.find_element_by_name("group_header").clear()
-        wd.find_element_by_name("group_header").send_keys(u"jakiś tekst")
+        wd.find_element_by_name("group_header").send_keys(header)
         wd.find_element_by_name("group_footer").click()
         wd.find_element_by_name("group_footer").clear()
-        wd.find_element_by_name("group_footer").send_keys(u"jakiś tekst")
+        wd.find_element_by_name("group_footer").send_keys(footer)
         # Zapisz grupe
         wd.find_element_by_name("submit").click()
 
     def przejdz_do_grup(self, wd):
         wd.find_element_by_link_text("groups").click()
 
-    def zaloguj(self, wd):
+    def zaloguj(self, wd, username, password):
         wd.find_element_by_name("user").click()
         wd.find_element_by_name("user").clear()
-        wd.find_element_by_name("user").send_keys("admin")
+        wd.find_element_by_name("user").send_keys(username)
         wd.find_element_by_name("pass").clear()
-        wd.find_element_by_name("pass").send_keys("secret")
+        wd.find_element_by_name("pass").send_keys(password)
         wd.find_element_by_xpath("//input[@value='Login']").click()
 
     def otworz_strone_startowa(self, wd):
