@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoAlertPresentException
-import unittest, time, re
+import unittest
 
 
 class TestDodajGrupe(unittest.TestCase):
@@ -16,15 +13,23 @@ class TestDodajGrupe(unittest.TestCase):
 
     def test_dodaj_grupe(self):
         wd = self.wd
-        wd.get("http://localhost/addressbook/")
-        wd.find_element_by_name("user").click()
-        wd.find_element_by_name("user").clear()
-        wd.find_element_by_name("user").send_keys("admin")
-        wd.find_element_by_name("pass").clear()
-        wd.find_element_by_name("pass").send_keys("secret")
-        wd.find_element_by_xpath("//input[@value='Login']").click()
+        self.otworz_strone_startowa(wd)
+        self.zaloguj(wd)
+        self.przejdz_do_grup(wd)
+        self.utworz_grupe(wd)
+        self.powrot_do_grup(wd)
+        self.wyloguj(wd)
+
+    def wyloguj(self, wd):
+        wd.find_element_by_link_text("Logout").click()
+
+    def powrot_do_grup(self, wd):
         wd.find_element_by_link_text("groups").click()
+
+    def utworz_grupe(self, wd):
+        # Dodaj grupe
         wd.find_element_by_name("new").click()
+        # Wypelnij grupe
         wd.find_element_by_name("group_name").click()
         wd.find_element_by_name("group_name").clear()
         wd.find_element_by_name("group_name").send_keys("grupa1")
@@ -35,10 +40,23 @@ class TestDodajGrupe(unittest.TestCase):
         wd.find_element_by_name("group_footer").click()
         wd.find_element_by_name("group_footer").clear()
         wd.find_element_by_name("group_footer").send_keys(u"jakiś tekst")
+        # Zapisz grupe
         wd.find_element_by_name("submit").click()
+
+    def przejdz_do_grup(self, wd):
         wd.find_element_by_link_text("groups").click()
-        wd.find_element_by_link_text("Logout").click()
-    
+
+    def zaloguj(self, wd):
+        wd.find_element_by_name("user").click()
+        wd.find_element_by_name("user").clear()
+        wd.find_element_by_name("user").send_keys("admin")
+        wd.find_element_by_name("pass").clear()
+        wd.find_element_by_name("pass").send_keys("secret")
+        wd.find_element_by_xpath("//input[@value='Login']").click()
+
+    def otworz_strone_startowa(self, wd):
+        wd.get("http://localhost/addressbook/")
+
     def is_element_present(self, how, what):
         try: self.wd.find_element(by=how, value=what)
         except NoSuchElementException as e: return False
