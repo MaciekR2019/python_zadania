@@ -3,6 +3,7 @@ from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoAlertPresentException
 import unittest
+from group import Group
 
 
 class TestDodajGrupe(unittest.TestCase):
@@ -16,7 +17,7 @@ class TestDodajGrupe(unittest.TestCase):
         self.otworz_strone_startowa(wd)
         self.zaloguj(wd, username="admin", password="secret")
         self.przejdz_do_grup(wd)
-        self.utworz_grupe(wd, name="grupa1", header="jakiś tekst", footer="jakiś tekstsdsdsd")
+        self.utworz_grupe(wd, Group(name="grupa1", header="jakiś tekst", footer="jakiś tekstsdsdsd"))
         self.powrot_do_grup(wd)
         self.wyloguj(wd)
 
@@ -25,7 +26,7 @@ class TestDodajGrupe(unittest.TestCase):
         self.otworz_strone_startowa(wd)
         self.zaloguj(wd, username="admin", password="secret")
         self.przejdz_do_grup(wd)
-        self.utworz_grupe(wd, name="", header="", footer="")
+        self.utworz_grupe(wd, Group(name="", header="", footer=""))
         self.powrot_do_grup(wd)
         self.wyloguj(wd)
 
@@ -35,20 +36,20 @@ class TestDodajGrupe(unittest.TestCase):
     def powrot_do_grup(self, wd):
         wd.find_element_by_link_text("groups").click()
 
-    def utworz_grupe(self, wd, name, header, footer):
+    def utworz_grupe(self, wd, group):
         # Dodaj grupe
         wd.find_element_by_name("new").click()
         # Wypelnij grupe
         wd.find_element_by_name("group_name").click()
         wd.find_element_by_name("group_name").clear()
-        wd.find_element_by_name("group_name").send_keys(name)
+        wd.find_element_by_name("group_name").send_keys(group.name)
         wd.find_element_by_name("group_header").click()
         wd.find_element_by_name("group_header").click()
         wd.find_element_by_name("group_header").clear()
-        wd.find_element_by_name("group_header").send_keys(header)
+        wd.find_element_by_name("group_header").send_keys(group.header)
         wd.find_element_by_name("group_footer").click()
         wd.find_element_by_name("group_footer").clear()
-        wd.find_element_by_name("group_footer").send_keys(footer)
+        wd.find_element_by_name("group_footer").send_keys(group.footer)
         # Zapisz grupe
         wd.find_element_by_name("submit").click()
 
