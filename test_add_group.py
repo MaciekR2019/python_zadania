@@ -7,12 +7,13 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoAlertPresentException
 import unittest, time, re
 
+
 class TestDodajGrupe(unittest.TestCase):
     def setUp(self):
         self.wd = webdriver.Firefox()
         self.wd.implicitly_wait(30)
 
-    
+
     def test_dodaj_grupe(self):
         wd = self.wd
         wd.get("http://localhost/addressbook/")
