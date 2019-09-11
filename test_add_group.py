@@ -11,7 +11,6 @@ class TestDodajGrupe(unittest.TestCase):
         self.wd = webdriver.Firefox()
         self.wd.implicitly_wait(30)
 
-
     def test_dodaj_grupe(self):
         wd = self.wd
         self.otworz_strone_startowa(wd)
@@ -76,7 +75,6 @@ class TestDodajGrupe(unittest.TestCase):
         try: self.wd.switch_to_alert()
         except NoAlertPresentException as e: return False
         return True
-    
 
     def tearDown(self):
         self.wd.quit()
