@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import NoAlertPresentException
@@ -24,7 +22,7 @@ class UntitledTestCase(unittest.TestCase):
         driver.find_element_by_name("pass").click()
         driver.find_element_by_name("pass").clear()
         driver.find_element_by_name("pass").send_keys("secret")
-        driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Password:'])[1]/following::input[2]").click()
+        driver.find_element_by_xpath("//input[@value='Login']").click()
         driver.find_element_by_link_text("add new").click()
         driver.find_element_by_name("firstname").click()
         driver.find_element_by_name("firstname").clear()
@@ -39,9 +37,6 @@ class UntitledTestCase(unittest.TestCase):
         driver.find_element_by_name("nickname").click()
         driver.find_element_by_name("nickname").clear()
         driver.find_element_by_name("nickname").send_keys("dfg df gdfgdg")
-        driver.find_element_by_name("photo").click()
-        driver.find_element_by_name("photo").clear()
-        driver.find_element_by_name("photo").send_keys("C:\\fakepath\\header.jpg")
         driver.find_element_by_name("title").click()
         driver.find_element_by_name("title").clear()
         driver.find_element_by_name("title").send_keys("fgdf gdf gdfg dfgdfg d")
@@ -77,23 +72,23 @@ class UntitledTestCase(unittest.TestCase):
         driver.find_element_by_name("homepage").send_keys("fghfghfhgh fgh")
         driver.find_element_by_name("bday").click()
         Select(driver.find_element_by_name("bday")).select_by_visible_text("11")
-        driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Birthday:'])[1]/following::option[13]").click()
+        driver.find_element_by_xpath("//div[@id='content']/form/select/option[13]").click()
         Select(driver.find_element_by_name("bmonth")).select_by_visible_text("April")
-        driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Birthday:'])[1]/following::option[38]").click()
+        driver.find_element_by_xpath("//div[@id='content']/form/select[2]/option[5]").click()
         driver.find_element_by_name("byear").click()
         driver.find_element_by_name("byear").clear()
         driver.find_element_by_name("byear").send_keys("1995")
         driver.find_element_by_name("aday").click()
         Select(driver.find_element_by_name("aday")).select_by_visible_text("13")
-        driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Anniversary:'])[1]/following::option[15]").click()
+        driver.find_element_by_xpath("//div[@id='content']/form/select[3]/option[15]").click()
         driver.find_element_by_name("amonth").click()
         Select(driver.find_element_by_name("amonth")).select_by_visible_text("August")
-        driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Anniversary:'])[1]/following::option[42]").click()
+        driver.find_element_by_xpath("//div[@id='content']/form/select[4]/option[9]").click()
         driver.find_element_by_name("ayear").click()
         driver.find_element_by_name("ayear").clear()
         driver.find_element_by_name("ayear").send_keys("2005")
         driver.find_element_by_name("new_group").click()
-        driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Group:'])[1]/following::option[1]").click()
+        driver.find_element_by_xpath("//div[@id='content']/form/select[5]/option").click()
         driver.find_element_by_name("address2").click()
         driver.find_element_by_name("address2").clear()
         driver.find_element_by_name("address2").send_keys("fgh fgh fhfg hf")
@@ -103,7 +98,7 @@ class UntitledTestCase(unittest.TestCase):
         driver.find_element_by_name("notes").click()
         driver.find_element_by_name("notes").clear()
         driver.find_element_by_name("notes").send_keys("hjk hkhjkhjk hjkhjk hjk hj")
-        driver.find_element_by_xpath("(.//*[normalize-space(text()) and normalize-space(.)='Notes:'])[1]/following::input[1]").click()
+        driver.find_element_by_xpath("(//input[@name='submit'])[2]").click()
         driver.find_element_by_link_text("home").click()
         driver.find_element_by_link_text("Logout").click()
     
@@ -116,18 +111,7 @@ class UntitledTestCase(unittest.TestCase):
         try: self.driver.switch_to_alert()
         except NoAlertPresentException as e: return False
         return True
-    
-    def close_alert_and_get_its_text(self):
-        try:
-            alert = self.driver.switch_to_alert()
-            alert_text = alert.text
-            if self.accept_next_alert:
-                alert.accept()
-            else:
-                alert.dismiss()
-            return alert_text
-        finally: self.accept_next_alert = True
-    
+
     def tearDown(self):
         self.driver.quit()
         self.assertEqual([], self.verificationErrors)
