@@ -12,12 +12,12 @@ def app(request):
 
 
 def test_dodaj_grupe(app):
-    app.zaloguj(username="admin", password="secret")
+    app.session.zaloguj(username="admin", password="secret")
     app.utworz_grupe(Group(name="grupa1", header="jakiś tekst", footer="jakiś tekstsdsdsd"))
-    app.wyloguj()
+    app.session.wyloguj()
 
 
 def test_dodaj_pusta_grupe(app):
-    app.zaloguj(username="admin", password="secret")
+    app.session.zaloguj(username="admin", password="secret")
     app.utworz_grupe(Group(name="", header="", footer=""))
-    app.wyloguj()
+    app.session.wyloguj()

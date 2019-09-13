@@ -1,14 +1,12 @@
 from selenium import webdriver
+from fixture.session import SessionHelper
 
 class Application:
 
     def __init__(self):
         self.wd = webdriver.Firefox()
         self.wd.implicitly_wait(30)
-
-    def wyloguj(self):
-        wd = self.wd
-        wd.find_element_by_link_text("Logout").click()
+        self.session = SessionHelper(self)
 
     def powrot_do_grup(self):
         wd = self.wd
@@ -37,16 +35,6 @@ class Application:
     def przejdz_do_grup(self):
         wd = self.wd
         wd.find_element_by_link_text("groups").click()
-
-    def zaloguj(self, username, password):
-        wd = self.wd
-        self.otworz_strone_startowa()
-        wd.find_element_by_name("user").click()
-        wd.find_element_by_name("user").clear()
-        wd.find_element_by_name("user").send_keys(username)
-        wd.find_element_by_name("pass").clear()
-        wd.find_element_by_name("pass").send_keys(password)
-        wd.find_element_by_xpath("//input[@value='Login']").click()
 
     def otworz_strone_startowa(self):
         wd = self.wd
