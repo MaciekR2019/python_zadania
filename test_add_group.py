@@ -21,6 +21,3 @@ def test_dodaj_pusta_grupe(app):
     app.zaloguj(username="admin", password="secret")
     app.utworz_grupe(Group(name="", header="", footer=""))
     app.wyloguj()
-
-if __name__ == "__main__":
-    unittest.main()
