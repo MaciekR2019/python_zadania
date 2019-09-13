@@ -1,36 +1,15 @@
-# -*- coding: utf-8 -*-
-from selenium import webdriver
-from selenium.webdriver.support.ui import Select
-from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import NoAlertPresentException
-import unittest, time, re
-from contacts import Contacts
+class ContactHelper:
 
-class TestDodajKontakt(unittest.TestCase):
-    def setUp(self):
-        self.wd = webdriver.Firefox()
-        self.wd.implicitly_wait(30)
-    
-    def test_dodaj_kontakt(self):
-        wd = self.wd
-        self.otworz_strone_startowa(wd)
-        self.zaloguj(wd, username="admin", password="secret")
-        self.przejdz_do_kontaktow(wd)
-        self.utworz_kontakt(wd, Contacts(firstname="dfgdfg", middlename="dfg dfg dfg dg", lastname="fd gdf gdf gdf", nickname="dfg df gdfgdg", title="fgdf gdf gdfg dfgdfg d",
-                            company="fdg dfg dfg dfg", address="fdg df gdf gdfg dfhfhjgh", home="fgh fgh fgh fgh", mobile="fg hfg hfg h",
-                            work="fghfghfghfgjhjghj", fax="retrytui", email="hjkjhk jhkhjk hjk", email2="hjk hjk hjk hjkhjk", email3="hjk hjk hj",
-                            homepage="fghfghfhgh fgh", bday="11", bmonth="April", byear="1995", aday="13", amonth="August", ayear="2005", address2="fgh fgh fhfg hf", phone2="hjkhjkhjkhjk",
-                            notes="hjk hkhjkhjk hjkhjk hjk hj"))
-        self.wroc_na_strone_startowa(wd)
-        self.wyloguj(wd)
+    def __init__(self, app):
+        self.app = app
 
-    def wyloguj(self, wd):
-        wd.find_element_by_link_text("Logout").click()
-
-    def wroc_na_strone_startowa(self, wd):
+    def wroc_na_strone_startowa(self):
+        wd = self.app.wd
         wd.find_element_by_link_text("home").click()
 
-    def utworz_kontakt(self, wd, contacts):
+    def utworz(self, contacts):
+        wd = self.app.wd
+        self.przejdz_do_kontaktow()
         # Wypelnij kontakt
         wd.find_element_by_name("firstname").click()
         wd.find_element_by_name("firstname").clear()
@@ -107,34 +86,8 @@ class TestDodajKontakt(unittest.TestCase):
         wd.find_element_by_name("notes").send_keys(contacts.notes)
         # Utworz kontakt
         wd.find_element_by_xpath("(//input[@name='submit'])[2]").click()
+        self.wroc_na_strone_startowa()
 
-    def przejdz_do_kontaktow(self, wd):
+    def przejdz_do_kontaktow(self):
+        wd = self.app.wd
         wd.find_element_by_link_text("add new").click()
-
-    def zaloguj(self, wd, username, password):
-        wd.find_element_by_name("user").click()
-        wd.find_element_by_name("user").clear()
-        wd.find_element_by_name("user").send_keys(username)
-        wd.find_element_by_name("pass").click()
-        wd.find_element_by_name("pass").clear()
-        wd.find_element_by_name("pass").send_keys(password)
-        wd.find_element_by_xpath("//input[@value='Login']").click()
-
-    def otworz_strone_startowa(self, wd):
-        wd.get("http://localhost/addressbook/")
-
-    def is_element_present(self, how, what):
-        try: self.wd.find_element(by=how, value=what)
-        except NoSuchElementException as e: return False
-        return True
-    
-    def is_alert_present(self):
-        try: self.wd.switch_to_alert()
-        except NoAlertPresentException as e: return False
-        return True
-
-    def tearDown(self):
-        self.wd.quit()
-
-if __name__ == "__main__":
-    unittest.main()
