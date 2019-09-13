@@ -10,7 +10,7 @@ class Application:
         self.wd.implicitly_wait(30)
         self.session = SessionHelper(self)
         self.group = GroupHelper(self)
-        self.contact = ContactHelper
+        self.contact = ContactHelper(self)
 
     def otworz_strone_startowa(self):
         wd = self.wd
