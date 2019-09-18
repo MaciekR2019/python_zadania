@@ -94,3 +94,48 @@ class ContactHelper:
     def przejdz_do_kontaktow(self):
         wd = self.app.wd
         wd.find_element_by_link_text("add new").click()
+
+    def usun_pierwszy_kontakt(self):
+        wd = self.app.wd
+        self.wroc_na_strone_startowa()
+        # wybierz pierwszy kontakt
+        wd.find_element_by_name("selected[]").click()
+        # usuń pierwszy kontakt
+        wd.find_element_by_xpath("//input[@value='Delete']").click()
+        # potwierdzenie usuniecia w oknie dialogowym
+        wd.switch_to.alert.accept()
+        self.wroc_na_strone_startowa()
+
+    def edytuj_kontakt(self, contacts):
+        wd = self.app.wd
+        # edycja kontaktu
+        wd.find_element_by_name("firstname").click()
+        wd.find_element_by_name("firstname").clear()
+        wd.find_element_by_name("firstname").send_keys(contacts.firstname)
+        wd.find_element_by_name("middlename").click()
+        wd.find_element_by_name("middlename").clear()
+        wd.find_element_by_name("middlename").send_keys(contacts.middlename)
+        wd.find_element_by_name("lastname").click()
+        wd.find_element_by_name("lastname").clear()
+        wd.find_element_by_name("lastname").send_keys(contacts.lastname)
+        wd.find_element_by_name("nickname").click()
+        wd.find_element_by_name("nickname").clear()
+        wd.find_element_by_name("nickname").send_keys(contacts.nickname)
+        wd.find_element_by_name("title").click()
+        wd.find_element_by_name("title").clear()
+        wd.find_element_by_name("title").send_keys(contacts.title)
+        wd.find_element_by_name("company").click()
+        wd.find_element_by_name("company").clear()
+        wd.find_element_by_name("company").send_keys(contacts.company)
+        wd.find_element_by_name("address").click()
+        wd.find_element_by_name("address").clear()
+        wd.find_element_by_name("address").send_keys(contacts.address)
+        # Zapisz zmianę
+        wd.find_element_by_xpath("//input[@value='Update']").click()
+
+    def edytuj_pierwszy_kontakt(self, contacts):
+        wd = self.app.wd
+        self.wroc_na_strone_startowa()
+        # edytuj pierwszy kontakt
+        wd.find_element_by_xpath("//a//img[@title='Edit']").click()
+        self.edytuj_kontakt(contacts)
