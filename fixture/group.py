@@ -19,7 +19,6 @@ class GroupHelper:
 
     def wypelnij_grupe(self, group):
         wd = self.app.wd
-        # Wypelnij grupe
         wd.find_element_by_name("group_name").click()
         wd.find_element_by_name("group_name").clear()
         wd.find_element_by_name("group_name").send_keys(group.name)
