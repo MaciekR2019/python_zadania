@@ -18,17 +18,17 @@ class GroupHelper:
         self.powrot_do_grup()
 
     def wypelnij_grupe(self, group):
+        # wd = self.app.wd
+        self.zmien_wartosc_pola("group_name", group.name)
+        self.zmien_wartosc_pola("group_header", group.header)
+        self.zmien_wartosc_pola("group_footer", group.footer)
+
+    def zmien_wartosc_pola(self, field_name, text):
         wd = self.app.wd
-        wd.find_element_by_name("group_name").click()
-        wd.find_element_by_name("group_name").clear()
-        wd.find_element_by_name("group_name").send_keys(group.name)
-        wd.find_element_by_name("group_header").click()
-        wd.find_element_by_name("group_header").click()
-        wd.find_element_by_name("group_header").clear()
-        wd.find_element_by_name("group_header").send_keys(group.header)
-        wd.find_element_by_name("group_footer").click()
-        wd.find_element_by_name("group_footer").clear()
-        wd.find_element_by_name("group_footer").send_keys(group.footer)
+        if text is not None:
+            wd.find_element_by_name(field_name).click()
+            wd.find_element_by_name(field_name).clear()
+            wd.find_element_by_name(field_name).send_keys(text)
 
     def usun_pierwsza_grupe(self):
         wd = self.app.wd
@@ -43,15 +43,17 @@ class GroupHelper:
         wd = self.app.wd
         wd.find_element_by_link_text("groups").click()
 
-    def edytuj_grupe(self, group):
+    def wybierz_pierwsza_grupe(self):
+        wd = self.app.wd
+        wd.find_element_by_name("selected[]").click()
+
+    def edytuj_pierwsza_grupe(self, new_group_data):
         wd = self.app.wd
         self.przejdz_do_grup()
-        # wybierz pierwszą grupę
-        wd.find_element_by_name("selected[]").click()
+        self.wybierz_pierwsza_grupe()
         # kliknij edytuj
         wd.find_element_by_xpath("//input[@value='Edit group']").click()
-        self.wypelnij_grupe(group)
+        self.wypelnij_grupe(new_group_data)
         # zapisz zmianę
         wd.find_element_by_xpath("//input[@value='Update']").click()
-        # wróc na stronę grup
-        wd.find_element_by_xpath("//div[@class='msgbox']//a[text()='group page']").click()
+        self.powrot_do_grup()
