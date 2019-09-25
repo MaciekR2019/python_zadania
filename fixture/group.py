@@ -3,9 +3,10 @@ class GroupHelper:
     def __init__(self, app):
         self.app = app
 
-    def powrot_do_grup(self):
+    def przejdz_do_grup(self):
         wd = self.app.wd
-        wd.find_element_by_link_text("groups").click()
+        if not (wd.current_url.endswith("/group.php") and len(wd.find_elements_by_name("new")) > 0):
+            wd.find_element_by_link_text("groups").click()
 
     def utworz(self, group):
         wd = self.app.wd
@@ -15,7 +16,7 @@ class GroupHelper:
         self.wypelnij_grupe(group)
         # Zapisz grupe
         wd.find_element_by_name("submit").click()
-        self.powrot_do_grup()
+        self.przejdz_do_grup()
 
     def wypelnij_grupe(self, group):
         # wd = self.app.wd
@@ -37,11 +38,8 @@ class GroupHelper:
         wd.find_element_by_name("selected[]").click()
         # usuń pierwszą grupę
         wd.find_element_by_name("delete").click()
-        self.powrot_do_grup()
-
-    def przejdz_do_grup(self):
-        wd = self.app.wd
-        wd.find_element_by_link_text("groups").click()
+        # self.powrot_do_grup()
+        self.przejdz_do_grup()
 
     def wybierz_pierwsza_grupe(self):
         wd = self.app.wd
@@ -56,10 +54,9 @@ class GroupHelper:
         self.wypelnij_grupe(new_group_data)
         # zapisz zmianę
         wd.find_element_by_xpath("//input[@value='Update']").click()
-        self.powrot_do_grup()
+        self.przejdz_do_grup()
 
     def count(self):
         wd = self.app.wd
         self.przejdz_do_grup()
         return len(wd.find_elements_by_name("selected[]"))
-

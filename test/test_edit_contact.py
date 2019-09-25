@@ -13,7 +13,4 @@ def test_edytuj_pierwszy_kontakt(app):
                                     amonth="August", ayear="2005", new_group="[none]", address2="fgh fgh fhfg hf",
                                     phone2="hjkhjkhjkhjk", notes="hjk hkhjkhjk hjkhjk hjk hj"))
     app.contact.edytuj_pierwszy_kontakt(
-        Contacts(firstname="New firstname", middlename="New middlename", lastname="New lastname",
-                 nickname="New nickname", title="New title", company="New company", address="", home="", mobile="",
-                 work="", fax="", email="", email2="", email3="", homepage="", bday="12", bmonth="May", byear="1990",
-                 aday="10", amonth="August", ayear="2000", new_group="[none]", address2="", phone2="", notes=""))
+        Contacts(firstname="Zulu", middlename="Pierwszy", lastname="Gula"))

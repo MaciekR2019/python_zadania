@@ -8,7 +8,8 @@ class ContactHelper:
 
     def wroc_na_strone_startowa(self):
         wd = self.app.wd
-        wd.find_element_by_link_text("home").click()
+        if not (wd.current_url.endswith("/addressbook/")):
+            wd.find_element_by_link_text("home").click()
 
     def utworz(self, contacts):
         wd = self.app.wd
@@ -51,9 +52,10 @@ class ContactHelper:
 
     def wybierz_z_listy(self, field_name, text, xpath):
         wd = self.app.wd
-        wd.find_element_by_name(field_name).click()
-        Select(wd.find_element_by_name(field_name)).select_by_visible_text(text)
-        wd.find_element_by_xpath(xpath).click()
+        if text is not None:
+            wd.find_element_by_name(field_name).click()
+            Select(wd.find_element_by_name(field_name)).select_by_visible_text(text)
+            wd.find_element_by_xpath(xpath).click()
 
     def zmien_wartosc_pola(self, field_name, text):
         wd = self.app.wd
