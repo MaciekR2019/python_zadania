@@ -23,7 +23,7 @@ class SessionHelper:
 
     def jest_zalogowany_jako(self, username):
         wd = self.app.wd
-        return wd.find_element_by_xpath("//*[@id='top']/form/b").text == "("+username+")"
+        return wd.find_element_by_xpath("//*[@id='top']/form/b").text == "(" + username + ")"
 
     def ensure_wyloguj(self):
         # wd = self.app.wd

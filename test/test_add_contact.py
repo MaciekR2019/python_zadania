@@ -11,5 +11,5 @@ def test_dodaj_kontakt(app):
                  work="fghfghfghfgjhjghj", fax="retrytui", email="hjkjhk jhkhjk hjk", email2="hjk hjk hjk hjkhjk",
                  email3="hjk hjk hj",
                  homepage="fghfghfhgh fgh", bday="11", bmonth="April", byear="1995", aday="13", amonth="August",
-                 ayear="2005", address2="fgh fgh fhfg hf", phone2="hjkhjkhjkhjk",
+                 ayear="2005", new_group="[none]", address2="fgh fgh fhfg hf", phone2="hjkhjkhjkhjk",
                  notes="hjk hkhjkhjk hjkhjk hjk hj"))

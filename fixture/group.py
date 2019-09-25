@@ -57,3 +57,9 @@ class GroupHelper:
         # zapisz zmianę
         wd.find_element_by_xpath("//input[@value='Update']").click()
         self.powrot_do_grup()
+
+    def count(self):
+        wd = self.app.wd
+        self.przejdz_do_grup()
+        return len(wd.find_elements_by_name("selected[]"))
+
