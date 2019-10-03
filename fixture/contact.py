@@ -1,4 +1,5 @@
 from selenium.webdriver.support.ui import Select
+from model.contact import Contacts
 
 
 class ContactHelper:
@@ -96,3 +97,16 @@ class ContactHelper:
     def sprawdz_czy_istnieje(self):
         wd = self.app.wd
         return len(wd.find_elements_by_name("new_group")) > 0
+
+    def get_contact_list(self):
+        wd = self.app.wd
+        self.wroc_na_strone_startowa()
+        contacts = []
+        for element in wd.find_elements_by_name("entry"):
+            # text = element.text
+            td = element.find_elements_by_tag_name("td")
+            td_ln = td[1].text
+            td_fn = td[2].text
+            id = element.find_element_by_name("selected[]").get_attribute("value")
+            contacts.append(Contacts(lastname=td_ln, firstname=td_fn, id=id))
+        return contacts
