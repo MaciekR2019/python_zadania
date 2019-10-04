@@ -35,25 +35,34 @@ class GroupHelper:
             wd.find_element_by_name(field_name).clear()
             wd.find_element_by_name(field_name).send_keys(text)
 
-    def usun_pierwsza_grupe(self):
+    def usun_grupe_index(self, index):
         wd = self.app.wd
         self.przejdz_do_grup()
-        # wybierz pierwszą grupę
-        wd.find_element_by_name("selected[]").click()
+        self.wybierz_grupe_index(index)
         # usuń pierwszą grupę
         wd.find_element_by_name("delete").click()
         # self.powrot_do_grup()
         self.przejdz_do_grup()
         self.group_cache = None
 
+    def usun_pierwsza_grupe(self):
+        self.usun_grupe_index(0)
+
+    def wybierz_grupe_index(self, index):
+        wd = self.app.wd
+        wd.find_elements_by_name("selected[]")[index].click()
+
     def wybierz_pierwsza_grupe(self):
         wd = self.app.wd
         wd.find_element_by_name("selected[]").click()
 
-    def edytuj_pierwsza_grupe(self, new_group_data):
+    def edytuj_pierwsza_grupe(self):
+        self.edytuj_grupe_index(0)
+
+    def edytuj_grupe_index(self, index, new_group_data):
         wd = self.app.wd
         self.przejdz_do_grup()
-        self.wybierz_pierwsza_grupe()
+        self.wybierz_grupe_index(index)
         # kliknij edytuj
         wd.find_element_by_xpath("//input[@value='Edit group']").click()
         self.wypelnij_grupe(new_group_data)

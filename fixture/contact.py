@@ -71,10 +71,12 @@ class ContactHelper:
         wd.find_element_by_link_text("add new").click()
 
     def usun_pierwszy_kontakt(self):
+        self.usun_kontakt_index(0)
+
+    def usun_kontakt_index(self, index):
         wd = self.app.wd
         self.wroc_na_strone_startowa()
-        # wybierz pierwszy kontakt
-        wd.find_element_by_name("selected[]").click()
+        self.wybierz_kontakt_index(index)
         # usuń pierwszy kontakt
         wd.find_element_by_xpath("//input[@value='Delete']").click()
         # potwierdzenie usuniecia w oknie dialogowym
@@ -82,15 +84,33 @@ class ContactHelper:
         self.wroc_na_strone_startowa()
         self.contact_cache = None
 
-    def edytuj_pierwszy_kontakt(self, new_contact_data):
+    def wybierz_kontakt_index(self, index):
+        wd = self.app.wd
+        wd.find_elements_by_name("selected[]")[index].click()
+
+    def wybierz_pierwszy_kontakt(self):
+        wd = self.app.wd
+        wd.find_element_by_name("selected[]").click()
+
+    def edytuj_pierwszy_kontakt(self):
+        self.edytuj_kontakt_index(0)
+
+    def edytuj_kontakt_index(self, index, new_contact_data):
         wd = self.app.wd
         self.wroc_na_strone_startowa()
-        # edytuj pierwszy kontakt
-        wd.find_element_by_xpath("//a//img[@title='Edit']").click()
+        self.wybierz_do_edycji_kontakt_index(index)
         self.wypelnij_kontakt(new_contact_data)
         # Zapisz zmianę
         wd.find_element_by_xpath("//input[@value='Update']").click()
         self.contact_cache = None
+
+    def wybierz_do_edycji_kontakt_index(self, index):
+        wd = self.app.wd
+        wd.find_elements_by_xpath("//a//img[@title='Edit']")[index].click()
+
+    def wybierz_do_edycji_pierwszy_kontakt(self):
+        wd = self.app.wd
+        wd.find_element_by_xpath("//a//img[@title='Edit']").click()
 
     def count(self):
         wd = self.app.wd
