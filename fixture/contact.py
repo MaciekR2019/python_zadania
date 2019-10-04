@@ -19,6 +19,7 @@ class ContactHelper:
         # Utworz kontakt
         wd.find_element_by_xpath("(//input[@name='submit'])[2]").click()
         self.wroc_na_strone_startowa()
+        self.contact_cache = None
 
     def wypelnij_kontakt(self, contacts):
         self.zmien_wartosc_pola("firstname", contacts.firstname)
@@ -79,6 +80,7 @@ class ContactHelper:
         # potwierdzenie usuniecia w oknie dialogowym
         wd.switch_to.alert.accept()
         self.wroc_na_strone_startowa()
+        self.contact_cache = None
 
     def edytuj_pierwszy_kontakt(self, new_contact_data):
         wd = self.app.wd
@@ -88,6 +90,7 @@ class ContactHelper:
         self.wypelnij_kontakt(new_contact_data)
         # Zapisz zmianę
         wd.find_element_by_xpath("//input[@value='Update']").click()
+        self.contact_cache = None
 
     def count(self):
         wd = self.app.wd
@@ -98,15 +101,17 @@ class ContactHelper:
         wd = self.app.wd
         return len(wd.find_elements_by_name("new_group")) > 0
 
+    contact_cache = None
+
     def get_contact_list(self):
-        wd = self.app.wd
-        self.wroc_na_strone_startowa()
-        contacts = []
-        for element in wd.find_elements_by_name("entry"):
-            # text = element.text
-            td = element.find_elements_by_tag_name("td")
-            td_ln = td[1].text
-            td_fn = td[2].text
-            id = element.find_element_by_name("selected[]").get_attribute("value")
-            contacts.append(Contacts(lastname=td_ln, firstname=td_fn, id=id))
-        return contacts
+        if self.contact_cache is None:
+            wd = self.app.wd
+            self.wroc_na_strone_startowa()
+            self.contact_cache = []
+            for element in wd.find_elements_by_name("entry"):
+                td = element.find_elements_by_tag_name("td")
+                td_ln = td[1].text
+                td_fn = td[2].text
+                id = element.find_element_by_name("selected[]").get_attribute("value")
+                self.contact_cache.append(Contacts(lastname=td_ln, firstname=td_fn, id=id))
+        return list(self.contact_cache)
