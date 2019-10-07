@@ -1,5 +1,6 @@
 from selenium.webdriver.support.ui import Select
 from model.contact import Contacts
+import re
 
 
 class ContactHelper:
@@ -7,7 +8,7 @@ class ContactHelper:
     def __init__(self, app):
         self.app = app
 
-    def wroc_na_strone_startowa(self):
+    def otworz_strone_startowa(self):
         wd = self.app.wd
         if not (wd.current_url.endswith("/addressbook/")):
             wd.find_element_by_link_text("home").click()
@@ -18,7 +19,7 @@ class ContactHelper:
         self.wypelnij_kontakt(contacts)
         # Utworz kontakt
         wd.find_element_by_xpath("(//input[@name='submit'])[2]").click()
-        self.wroc_na_strone_startowa()
+        self.otworz_strone_startowa()
         self.contact_cache = None
 
     def wypelnij_kontakt(self, contacts):
@@ -75,13 +76,13 @@ class ContactHelper:
 
     def usun_kontakt_index(self, index):
         wd = self.app.wd
-        self.wroc_na_strone_startowa()
+        self.otworz_strone_startowa()
         self.wybierz_kontakt_index(index)
         # usuń pierwszy kontakt
         wd.find_element_by_xpath("//input[@value='Delete']").click()
         # potwierdzenie usuniecia w oknie dialogowym
         wd.switch_to.alert.accept()
-        self.wroc_na_strone_startowa()
+        self.otworz_strone_startowa()
         self.contact_cache = None
 
     def wybierz_kontakt_index(self, index):
@@ -97,7 +98,7 @@ class ContactHelper:
 
     def edytuj_kontakt_index(self, index, new_contact_data):
         wd = self.app.wd
-        self.wroc_na_strone_startowa()
+        self.otworz_strone_startowa()
         self.wybierz_do_edycji_kontakt_index(index)
         self.wypelnij_kontakt(new_contact_data)
         # Zapisz zmianę
@@ -106,15 +107,26 @@ class ContactHelper:
 
     def wybierz_do_edycji_kontakt_index(self, index):
         wd = self.app.wd
-        wd.find_elements_by_xpath("//a//img[@title='Edit']")[index].click()
+        self.otworz_strone_startowa()
+        wiersz = wd.find_elements_by_name("entry")[index]
+        td = wiersz.find_elements_by_tag_name("td")[7]
+        td.find_element_by_tag_name("a").click()
 
     def wybierz_do_edycji_pierwszy_kontakt(self):
         wd = self.app.wd
         wd.find_element_by_xpath("//a//img[@title='Edit']").click()
 
+    def wybierz_do_podgladu_kontakt_index(self, index):
+        wd = self.app.wd
+        self.otworz_strone_startowa()
+        wiersz = wd.find_elements_by_name("entry")[index]
+        td = wiersz.find_elements_by_tag_name("td")[6]
+        td.find_element_by_tag_name("a").click()
+
+
     def count(self):
         wd = self.app.wd
-        self.wroc_na_strone_startowa()
+        self.otworz_strone_startowa()
         return len(wd.find_elements_by_name("selected[]"))
 
     def sprawdz_czy_istnieje(self):
@@ -126,12 +138,38 @@ class ContactHelper:
     def get_contact_list(self):
         if self.contact_cache is None:
             wd = self.app.wd
-            self.wroc_na_strone_startowa()
+            self.otworz_strone_startowa()
             self.contact_cache = []
             for element in wd.find_elements_by_name("entry"):
                 td = element.find_elements_by_tag_name("td")
-                td_ln = td[1].text
-                td_fn = td[2].text
-                id = element.find_element_by_name("selected[]").get_attribute("value")
-                self.contact_cache.append(Contacts(lastname=td_ln, firstname=td_fn, id=id))
+                lastname = td[1].text
+                firstname = td[2].text
+                id = td[0].find_element_by_name("selected[]").get_attribute("value")
+                all_phones = td[5].text.splitlines()
+                self.contact_cache.append(Contacts(lastname=lastname, firstname=firstname, id=id,
+                                                   home=all_phones[0], mobile=all_phones[1], work=all_phones[2],
+                                                   phone2=all_phones[3]))
         return list(self.contact_cache)
+
+    def get_contact_info_from_edit_page(self, index):
+        wd = self.app.wd
+        self.wybierz_do_edycji_kontakt_index(index)
+        firstname = wd.find_element_by_name("home").get_attribute("value")
+        lastname = wd.find_element_by_name("home").get_attribute("value")
+        id = wd.find_element_by_name("home").get_attribute("value")
+        homephone = wd.find_element_by_name("home").get_attribute("value")
+        workphone = wd.find_element_by_name("work").get_attribute("value")
+        mobilephone = wd.find_element_by_name("mobile").get_attribute("value")
+        secondaryphone = wd.find_element_by_name("phone2").get_attribute("value")
+        return Contacts(firstname=firstname, lastname=lastname, id=id, home=homephone, work=workphone,
+                        mobile=mobilephone, phone2=secondaryphone)
+
+    def get_contact_from_view_page(self, index):
+        wd = self.app.wd
+        self.wybierz_do_podgladu_kontakt_index(index)
+        text = wd.find_element_by_id("content").text
+        homephone = re.search("H: (.*)", text).group(1)
+        workphone = re.search("W: (.*)", text).group(1)
+        mobilephone = re.search("M: (.*)", text).group(1)
+        secondaryphone = re.search("P: (.*)", text).group(1)
+        return Contacts(home=homephone, work=workphone, mobile=mobilephone, phone2=secondaryphone)
