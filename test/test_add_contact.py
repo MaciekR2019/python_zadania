@@ -5,7 +5,7 @@ import random
 import string
 import datetime
 
-symbols = string.ascii_letters + string.digits
+symbols = string.ascii_letters + string.digits + " "* 5
 domains = ["hotmail.com", "gmail.com", "wp.pl", "tlen.pl", "yahoo.com", "onet.pl", "lol.pl"]
 months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November",
           "December"]
