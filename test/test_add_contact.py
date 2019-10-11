@@ -62,8 +62,8 @@ testdata = [
              address=random_string("address", 50), home=random_numbers("home", 9), mobile=random_numbers("mobile", 9),
              work=random_numbers("work", 9), fax=random_numbers("fax", 9), email=random_emails("email"),
              email2=random_emails("email2"), email3=random_emails("email3"), homepage=random_www_site(),
-             bday=("" + random_month_day() + ""), bmonth=random_month(months), byear=random_year(),
-             aday=("" + random_month_day() + ""), amonth=random_month(months), ayear=current_year(), new_group="[none]",
+             bday=random_month_day(), bmonth=random_month(months), byear=random_year(),
+             aday=random_month_day(), amonth=random_month(months), ayear=current_year(), new_group="[none]",
              address2=random_string("address2", 50), phone2=random_numbers("phone2", 9),
              notes=random_string("notes", 30))
     for i in range(5)
