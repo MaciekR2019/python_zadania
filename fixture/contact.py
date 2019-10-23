@@ -85,9 +85,27 @@ class ContactHelper:
         self.otworz_strone_startowa()
         self.contact_cache = None
 
+
+    def usun_kontakt_id(self, id):
+        wd = self.app.wd
+        self.otworz_strone_startowa()
+        self.wybierz_kontakt_id(id)
+        # usuń pierwszy kontakt
+        wd.find_element_by_xpath("//input[@value='Delete']").click()
+        # potwierdzenie usuniecia w oknie dialogowym
+        wd.switch_to.alert.accept()
+        self.otworz_strone_startowa()
+        self.contact_cache = None
+
+
     def wybierz_kontakt_index(self, index):
         wd = self.app.wd
         wd.find_elements_by_name("selected[]")[index].click()
+
+
+    def wybierz_kontakt_id(self, id):
+        wd = self.app.wd
+        wd.find_element_by_css_selector("input[value='%s']" % id).click()
 
     def wybierz_pierwszy_kontakt(self):
         wd = self.app.wd
@@ -105,12 +123,28 @@ class ContactHelper:
         wd.find_element_by_xpath("//input[@value='Update']").click()
         self.contact_cache = None
 
+    def edytuj_kontakt_id(self, id, new_contact_data):
+        wd = self.app.wd
+        self.otworz_strone_startowa()
+        self.wybierz_do_edycji_kontakt_id(id)
+        self.wypelnij_kontakt(new_contact_data)
+        # Zapisz zmianę
+        wd.find_element_by_xpath("//input[@value='Update']").click()
+        self.contact_cache = None
+
+
     def wybierz_do_edycji_kontakt_index(self, index):
         wd = self.app.wd
         self.otworz_strone_startowa()
         wiersz = wd.find_elements_by_name("entry")[index]
         td = wiersz.find_elements_by_tag_name("td")[7]
         td.find_element_by_tag_name("a").click()
+
+    def wybierz_do_edycji_kontakt_id(self, id):
+        wd = self.app.wd
+        self.otworz_strone_startowa()
+        wd.find_element_by_xpath("//a[contains(@href, 'edit.php?id=%s')]" % id).click()
+
 
     def wybierz_do_edycji_pierwszy_kontakt(self):
         wd = self.app.wd

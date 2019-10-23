@@ -1,15 +1,16 @@
 from model.group import Group
-from random import randrange
+import random
 
 
-def test_usun_losowa_grupe(app):
-    group = Group(name="abc", header="123", footer="XYZ")
-    if app.group.count() == 0:
-        app.group.utworz(group)
-    old_groups = app.group.get_group_list()
-    index = randrange(len(old_groups))
-    app.group.usun_grupe_index(index)
-    assert len(old_groups) - 1 == app.group.count()
-    new_groups = app.group.get_group_list()
-    old_groups[index:index+1] = []
+def test_usun_losowa_grupe(app, db, check_ui):
+    if len(db.get_group_list()) == 0:
+        app.group.utworz(Group(name="abc"))
+    old_groups = db.get_group_list()
+    group = random.choice(old_groups)
+    app.group.usun_grupe_id(group.id)
+    new_groups = db.get_group_list()
+    assert len(old_groups) - 1 == len(new_groups)
+    old_groups.remove(group)
     assert old_groups == new_groups
+    if check_ui:
+        assert sorted(new_groups, key=Group.id_or_max) == sorted(app.group.get_group_list(), key=Group.id_or_max)

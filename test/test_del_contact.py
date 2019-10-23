@@ -1,8 +1,8 @@
 from model.contact import Contacts
-from random import randrange
+import random
 
 
-def test_usun_losowy_kontakt(app):
+def test_usun_losowy_kontakt(app, db, check_ui):
     contact = Contacts(firstname="dfgdfg", middlename="dfg dfg dfg dg", lastname="fd gdf gdf gdf",
                        nickname="dfg df gdfgdg", title="fgdf gdf gdfg dfgdfg d",
                        company="fdg dfg dfg dfg", address="fdg df gdf gdfg dfhfhjgh",
@@ -12,12 +12,15 @@ def test_usun_losowy_kontakt(app):
                        byear="1995", aday="13", amonth="August", ayear="2005", new_group="[none]",
                        address2="fgh fgh fhfg hf", phone2="hjkhjkhjkhjk",
                        notes="hjk hkhjkhjk hjkhjk hjk hj")
-    if app.contact.count() == 0:
+    # contact = json_contacts
+    if len(db.get_contact_list()) == 0:
         app.contact.utworz(contact)
-    old_contacts = app.contact.get_contact_list()
-    index = randrange(len(old_contacts))
-    app.contact.usun_kontakt_index(index)
+    old_contacts = db.get_contact_list()
+    chosen_contact = random.choice(old_contacts)
+    app.contact.usun_kontakt_id(chosen_contact.id)
+    new_contacts = db.get_contact_list()
     assert len(old_contacts) - 1 == app.contact.count()
-    new_contacts = app.contact.get_contact_list()
-    old_contacts[index:index+1] = []
+    old_contacts.remove(chosen_contact)
     assert old_contacts == new_contacts
+    if check_ui:
+        assert sorted(old_contacts, key=Contacts.id_or_max) == sorted(app.contact.get_contact_list(), key=Contacts.id_or_max)

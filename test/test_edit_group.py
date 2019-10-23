@@ -1,19 +1,18 @@
 from model.group import Group
-from random import randrange
+import random
 
 
-def test_edytuj_losowa_grupe_name(app):
-    if app.group.count() == 0:
+def test_edytuj_losowa_grupe_name(app, db, check_ui):
+    if len(db.get_group_list()) == 0:
         app.group.utworz(Group(name="a1b2c3", header="1-2-3", footer="X-Y-Z"))
-    old_groups = app.group.get_group_list()
-    index = randrange(len(old_groups))
-    group = Group(name="New name")
-    group.id = old_groups[index].id
-    app.group.edytuj_grupe_index(index, group)
-    assert len(old_groups) == app.group.count()
-    new_groups = app.group.get_group_list()
-    old_groups[index] = group
-    assert sorted(old_groups, key=Group.id_or_max) == sorted(new_groups, key=Group.id_or_max)
+    old_groups = db.get_group_list()
+    chosen_group = random.choice(old_groups)
+    app.group.edytuj_grupe_id(chosen_group.id, chosen_group)
+    new_groups = db.get_group_list()
+    assert len(old_groups) == len(new_groups)
+    assert old_groups == new_groups
+    if check_ui:
+        assert sorted(old_groups, key=Group.id_or_max) == sorted(app.group.get_group_list(), key=Group.id_or_max)
 
 # def test_edytuj_pierwsza_grupe_header(app):
 #     if app.group.count() == 0:

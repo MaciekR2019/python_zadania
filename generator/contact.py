@@ -53,7 +53,7 @@ def random_emails(prefix):
 
 
 def random_www_site():
-    return ('www' + random_domain(domains))
+    return ('www.' + random_domain(domains))
 
 
 def random_month(months):
