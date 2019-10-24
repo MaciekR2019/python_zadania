@@ -2,6 +2,13 @@ import re
 from random import randrange
 
 
+def test_all_contacts_on_home_page_vs_db(app, db):
+    contact_from_home_page = app.contact.get_contact_list()
+    contact_from_db = db.get_contact_list()
+    assert contact_from_home_page == contact_from_db
+    assert len(contact_from_home_page) == len(contact_from_db)
+
+
 def test_phones_on_home_page(app):
     index = randrange(app.contact.count())
     contact_from_home_page = app.contact.get_contact_list()[index]

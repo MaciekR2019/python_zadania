@@ -11,6 +11,8 @@ class GroupHelper:
         if not (wd.current_url.endswith("/group.php") and len(wd.find_elements_by_name("new")) > 0):
             wd.find_element_by_link_text("groups").click()
 
+    group_cache = None
+
     def utworz(self, group):
         wd = self.app.wd
         self.przejdz_do_grup()
@@ -100,7 +102,6 @@ class GroupHelper:
         self.przejdz_do_grup()
         return len(wd.find_elements_by_name("selected[]"))
 
-    group_cache = None
 
     def get_group_list(self):
         if self.group_cache is None:

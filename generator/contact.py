@@ -33,7 +33,7 @@ letters = string.ascii_lowercase
 
 
 def random_string(prefix, maxlen):
-    return prefix + "".join([random.choice(symbols) for i in range(random.randrange(maxlen))]).rstrip()
+    return prefix + "".join([random.choice(symbols) for i in range(random.randrange(5,maxlen))]).rstrip()
 
 
 def random_numbers(prefix, maxlen):
