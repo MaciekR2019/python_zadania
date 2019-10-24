@@ -1,11 +1,12 @@
 import re
 from random import randrange
+from model.contact import Contacts
 
 
 def test_all_contacts_on_home_page_vs_db(app, db):
     contact_from_home_page = app.contact.get_contact_list()
     contact_from_db = db.get_contact_list()
-    assert contact_from_home_page == contact_from_db
+    assert sorted(contact_from_home_page, key=Contacts.id_or_max) == sorted(contact_from_db, key=Contacts.id_or_max)
     assert len(contact_from_home_page) == len(contact_from_db)
 
 
