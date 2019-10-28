@@ -19,7 +19,7 @@ class DbFixture:
             cursor.execute("select group_id, group_name, group_header, group_footer from group_list")
             for row in cursor:
                 (id, name, header, footer) = row
-                list.append(Group(id=str(id), name=name, header=header, footer=footer))
+                list.append(Group(id=str(id), name=name))
         finally:
             cursor.close()
         return list
@@ -36,6 +36,31 @@ class DbFixture:
                 all_emails = "\n".join((email, email2, email3))
                 list.append(Contacts(id=str(id), firstname=firstname, lastname=lastname, address=address,
                                      all_phones_from_home_page=all_phones, all_emails_from_home_page=all_emails))
+        finally:
+            cursor.close()
+        return list
+
+    def get_contacts_in_group(self):
+        list = []
+        cursor = self.connection.cursor()
+        try:
+            cursor.execute("select group_id from address_in_groups where deprecated='0000-00-00 00:00:00'")
+            for row in cursor:
+                [group_id] = row
+                list.append(Group(id=str(group_id)))
+        finally:
+            cursor.close()
+        return list
+
+    def get_contacts_not_in_group(self):
+        list = []
+        cursor = self.connection.cursor()
+        try:
+            #cursor.execute("select id from addressbook where id not in (select id from address_in_groups) and deprecated='0000-00-00 00:00:00'")
+            cursor.execute("select id from addressbook where deprecated='0000-00-00 00:00:00'")
+            for row in cursor:
+                [id] = row
+                list.append(Contacts(id=str(id)))
         finally:
             cursor.close()
         return list

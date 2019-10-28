@@ -85,7 +85,6 @@ class ContactHelper:
         self.otworz_strone_startowa()
         self.contact_cache = None
 
-
     def usun_kontakt_id(self, id):
         wd = self.app.wd
         self.otworz_strone_startowa()
@@ -97,15 +96,15 @@ class ContactHelper:
         self.otworz_strone_startowa()
         self.contact_cache = None
 
-
     def wybierz_kontakt_index(self, index):
         wd = self.app.wd
         wd.find_elements_by_name("selected[]")[index].click()
 
-
     def wybierz_kontakt_id(self, id):
         wd = self.app.wd
-        wd.find_element_by_css_selector("input[value='%s']" % id).click()
+        self.otworz_strone_startowa()
+        wd.find_element_by_xpath("//tr[@name='entry']//input[@value='%s']" % id).click()
+
 
     def wybierz_pierwszy_kontakt(self):
         wd = self.app.wd
@@ -132,7 +131,6 @@ class ContactHelper:
         wd.find_element_by_xpath("//input[@value='Update']").click()
         self.contact_cache = None
 
-
     def wybierz_do_edycji_kontakt_index(self, index):
         wd = self.app.wd
         self.otworz_strone_startowa()
@@ -145,7 +143,6 @@ class ContactHelper:
         self.otworz_strone_startowa()
         wd.find_element_by_xpath("//a[contains(@href, 'edit.php?id=%s')]" % id).click()
 
-
     def wybierz_do_edycji_pierwszy_kontakt(self):
         wd = self.app.wd
         wd.find_element_by_xpath("//a//img[@title='Edit']").click()
@@ -157,9 +154,33 @@ class ContactHelper:
         td = wiersz.find_elements_by_tag_name("td")[6]
         td.find_element_by_tag_name("a").click()
 
+    def wybierz_grupe_do_usuniecia_kontaktu(self, id):
+        wd = self.app.wd
+        #self.otworz_strone_startowa()
+        wd.find_element_by_xpath("//select[@name='group']//option[@value='%s']" % id).click()
+
+
+    def wybierz_grupe_dla_kontaktu_id(self, id):
+        wd = self.app.wd
+        wd.find_element_by_xpath("//select[@name='to_group']//option[@value='%s']" % id).click()
+        # Potwierdź wybór przyciskiem
+        wd.find_element_by_xpath("//input[@value='Add to']").click()
+        self.otworz_strone_startowa()
+
+    def usun_kontakt_z_grupy(self):
+        wd = self.app.wd
+        wd.find_element_by_xpath("//input[@name='remove']").click()
+        # powrót do grupy z której usunięto kontakt
+        wd.find_element_by_xpath("//a[contains(@href, './?group=')]").click()
+
     def count(self):
         wd = self.app.wd
         self.otworz_strone_startowa()
+        return len(wd.find_elements_by_name("selected[]"))
+
+
+    def count_contacts_in_choosen_group(self):
+        wd = self.app.wd
         return len(wd.find_elements_by_name("selected[]"))
 
     def sprawdz_czy_istnieje(self):
