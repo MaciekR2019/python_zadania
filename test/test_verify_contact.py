@@ -4,10 +4,17 @@ from model.contact import Contacts
 
 
 def test_all_contacts_on_home_page_vs_db(app, db):
-    contact_from_home_page = app.contact.get_contact_list()
-    contact_from_db = db.get_contact_list()
-    assert sorted(contact_from_home_page, key=Contacts.id_or_max) == sorted(contact_from_db, key=Contacts.id_or_max)
-    assert len(contact_from_home_page) == len(contact_from_db)
+    list_range = len(db.get_contact_list())
+    for row in range(list_range):
+        contact_from_home_page = sorted(app.contact.get_contact_list(), key=Contacts.id_or_max)[row]
+        contact_from_db = sorted(db.get_contact_list(), key=Contacts.id_or_max)[row]
+        assert sorted(contact_from_db.lastname) == sorted(contact_from_home_page.lastname)
+        assert sorted(contact_from_db.firstname) == sorted(contact_from_home_page.firstname)
+        assert sorted(address_clean(contact_from_db.address)) == sorted(contact_from_home_page.address)
+        assert sorted(merge_phones_like_on_home_page(contact_from_db)) == sorted(
+            contact_from_home_page.all_phones_from_home_page)
+        assert sorted(merge_emails_like_on_home_page(contact_from_db)) == sorted(
+            contact_from_home_page.all_emails_from_home_page)
 
 
 def test_phones_on_home_page(app):
@@ -53,6 +60,10 @@ def test_emails_on_home_page(app):
 
 def clear(s):
     return re.sub("[() -]", "", s)
+
+
+def address_clean(s):
+    return re.sub("  ", " ", s)
 
 
 regex = r"[^@]+@[^@]+.[^@]+"
