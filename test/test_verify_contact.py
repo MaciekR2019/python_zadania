@@ -17,6 +17,7 @@ def test_all_contacts_on_home_page_vs_db(app, db):
             contact_from_home_page.all_emails_from_home_page)
 
 
+
 def test_phones_on_home_page(app):
     index = randrange(app.contact.count())
     contact_from_home_page = app.contact.get_contact_list()[index]
@@ -39,7 +40,7 @@ def test_address_on_home_page(app):
     index = randrange(app.contact.count())
     contact_from_home_page = app.contact.get_contact_list()[index]
     contact_from_edit_page = app.contact.get_contact_info_from_edit_page(index)
-    assert contact_from_home_page.address == contact_from_edit_page.address
+    assert contact_from_home_page.address == address_clean(contact_from_edit_page.address)
 
 
 def test_names_on_home_page(app):
